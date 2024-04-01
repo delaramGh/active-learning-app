@@ -15,7 +15,7 @@ To use the application, follow these steps:
 3. Fill the AL-Config.txt file as explained in the next section.
 4. Run the script using `streamlit run app.py`
 
-*note that the first run will take some time because the app is creating a .CSV file of the dataset, and doing preprocessing on image pairs.
+*Please note that the initial launch requires additional time as the application is generating a .CSV file for the dataset and performing preprocessing on the image pairs.
 
       
 <img src="figs/req.jpg" width="90%">
@@ -31,7 +31,13 @@ To use the application, follow these steps:
 
 ## Results
 
-The results are stored in the `output` directory. These results are also presented in the paper. The scripts in this repository can be used to reproduce them.
+The results are stored in the `AILA_Dataset.csv` file. This file contains eight columns:
+
+1. original: This column stores the names of original images.
+2. generated: This column stores the names of generated images.
+3. Label: This column stores the labels for each pair of images. 1 is okay, 0 is lost, and -1 is unlabeled.
+4. human-machine: This column obtains whether this image is labeled by the human annotator or automatically. h means labeled by human, and m means labeled automatically.
+5. Other columns are the extracted features from image pairs that are used for training the ML-model.
 
 
 <img src="figs/out.jpg" width="80%">
