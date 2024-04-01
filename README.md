@@ -1,7 +1,6 @@
 # Active Image Labeling App (AILA)
 
-This repository contains the code for the "Active Image Labeling App" or AILA. The app is made for a specific labeling task that requires the annotator to compare an original image with a modified version of it.  The "Active" term is because of the active-learning backend that the application has. It reduces the human effort in labeling by automatically labeling some of the data based on what the ML-model is learning from the human annotator.
-
+This repository contains the code for the Active Image Labeling App (AILA), a tool designed for a specialized labeling task. This task requires the annotator to compare an original image with its altered version.  The "Active" term reflects the active-learning backend that the application has. It reduces the human effort in labeling by using an ML-model to automatically label some of the data based on what the ML-model is learning from the human annotator.
 
 ## Abstract
 
