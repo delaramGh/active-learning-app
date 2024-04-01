@@ -19,8 +19,27 @@ import os
 import streamlit as st
 
 
-csv_path__ = "APP_TEST.csv"
-sub_csv_path__ = "sub_APP_TEST.csv"
+
+def configuration():
+    with open("AL-config.txt", 'r') as f:
+        lines = f.readlines()
+    splt1 = lines[0]
+    splt2 = lines[1]
+    threshold = lines[2]
+    org_path = lines[3]
+    gen_path = lines[4]
+    org_path = org_path[org_path.find('=')+1:org_path.find(';')]
+    gen_path = gen_path[gen_path.find('=')+1:gen_path.find(';')]
+    splt1 = splt1[splt1.find('=')+1:splt1.find(';')]
+    splt2 = splt2[splt2.find('=')+1:splt2.find(';')]
+    threshold = threshold[threshold.find('=')+1:threshold.find(';')]
+    return org_path, gen_path, float(splt1), float(splt2), float(threshold)
+
+
+_, _, split1__, split2__, threshold__ = configuration()
+
+csv_path__ = "AILA_Dataset.csv"
+sub_csv_path__ = "AILA_sub_Dataset.csv"
 #*************************************utils**************************************
 def get_image_files():
     df = pd.read_csv(sub_csv_path__)
@@ -72,7 +91,7 @@ def create_csv_file(org_img_path, gen_img_path):
     df = pd.DataFrame({
         "original" : org_list,
         "generated" : gen_list, 
-        "Lable" : list(-1*np.ones(len(org_list))),
+        "Label" : list(-1*np.ones(len(org_list))),
         "human-machine" : hm,
     })
     df.to_csv(csv_path__)
@@ -107,7 +126,7 @@ def preprocessing2(org_img_path, gen_img_path):
     return "Preprocessing is done successfully!"
 
 
-def create_sub_dataset(state, split1=0.2, split2=0.05):
+def create_sub_dataset(state, split1=split1__, split2=split2__):
     df = pd.read_csv(csv_path__)
     size = df.shape[0]
     if state["sub_dataset"] == 1:
@@ -146,7 +165,7 @@ def handle_training():
     # __new_model_eval__(model, csv_path__, len(y_train))
 
     #prediction and automatic labeling
-    _, s2 = predict(model, csv_path__, threshold=0.9)
+    _, s2 = predict(model, csv_path__, threshold=threshold__)
     return s1, s2
     
 
@@ -185,7 +204,7 @@ def model_train(x_train, y_train):
     return clf, "Model training is done! "
 
 
-def predict(model, df_name, threshold=0.95):
+def predict(model, df_name, threshold):
     #this function uses the trained model to label the data that we are confident about.
     #it writes the labels in the csv file.
     df = pd.read_csv(df_name)
@@ -236,8 +255,8 @@ def report():
     number_of_h = len(df.loc[df["human-machine"] == "h"])
     number_of_m = len(df.loc[df["human-machine"] == "m"])
     st.write("📑   FINAL REPORT")
-    st.write("+ Number of automatically labeled data: ", str(number_of_h), " out of ", str(number_of_h + number_of_m))
-    st.write("+ Numan effort is: ", str(100*number_of_h/(number_of_h + number_of_m))[:4])
+    st.write("+ Number of automatically labeled data:  ", str(number_of_h), " out of ", str(number_of_h + number_of_m))
+    st.write("+ Human effort is reduced by:  ", str(100-(100*number_of_h/(number_of_h + number_of_m)))[:4], "%")
     if "true_label" in df.columns:
         df2 = df.loc[df["human-machine"] == 'm'] 
         correct = np.sum(df2["true_label"] == df2["Label"])

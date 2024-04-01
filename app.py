@@ -10,9 +10,10 @@ from streamlit_modal import Modal
 
 
 # Constants
-IMAGE_DIR = "C:\\Users\\ASUS\\Desktop\\research\\mitacs project\\Delaram_work\\active learning\\dataset\\high_fog"
-ORIGINAL_IMAGE_DIR = "C:\\Users\\ASUS\\Desktop\\research\\mitacs project\\Delaram_work\\active learning\\dataset\\original_dataset"
+# IMAGE_DIR = ""
+# ORIGINAL_IMAGE_DIR = ""
 STATE_FILE = "state.json"
+ORIGINAL_IMAGE_DIR, IMAGE_DIR, _, _, _ = dgh.configuration()
 
 LABELS = ["Ok", "Lost"]
 labels_dict = {
