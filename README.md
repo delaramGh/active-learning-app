@@ -25,14 +25,6 @@ To use the application, follow these steps:
 
       
 <img src="figs/req.jpg" width="90%">
-
-## Scripts
-
-- `rq1.py`: Script to reproduce the results for RQ1.
-- `rq2_dataset.py`: Script to generate the dataset for RQ2.
-- `rq2_models.py`: Script to generate the models and evaluate them for RQ2.
-- `rq2.py`: Script to reproduce the results for RQ2.
-
   
 
 ## Results
