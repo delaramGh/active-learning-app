@@ -87,14 +87,9 @@ def next_image(state, image_files):
 
 
 def write_states(STATUS):
-    # for i in STATUS.ARR.values():
-    #     if i != "":
-    #         st.write(i)
-    st.write("- Model trainig is done!")
-    st.write("- 270 (56 new) data are labeled automatically. ")
-    st.write("- 330 data are unlabeled. ")
-    st.write("   ")
-    st.write("   ")
+    for i in STATUS.ARR.values():
+        if i != "":
+            st.write(i)
 
 
 
@@ -134,8 +129,13 @@ def main():
 
     if st.sidebar.button("Show Statistics 📈📊"):
         with modal.container():
+                s = '<p style="font-family:sans-serif; font-size: 20px;">▶️   APP STATUS</p>'
+                st.write(s, unsafe_allow_html=True)
                 write_states(STATUS)
+                st.markdown(""" """)
+                st.markdown(""" """)
                 dgh.report()
+                st.markdown(""" """)
     st.sidebar.markdown("""---""")
     st.sidebar.markdown(""" """)
 
