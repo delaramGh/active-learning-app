@@ -12,8 +12,13 @@ To use the application, follow these steps:
 
 1. Clone the repository.
 2. Install the required dependencies by running `pip install -r requirements.txt`.
-3. Fill the AL-Config.txt file as explained in the next section.
-4. Run the script using `streamlit run app.py`
+3. Fill the AL-Config.txt file.
+   - split1:
+   - split2:
+   - confidence_threshold:
+   - org_img_path:
+   - gen_img_path:
+5. Run the script using `streamlit run app.py`
 
 *Please note that the initial launch requires additional time as the application is generating a .CSV file for the dataset and performing preprocessing on the image pairs.
 
