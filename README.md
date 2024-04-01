@@ -1,8 +1,7 @@
 # Active Image Labeling App (AILA)
 
-This repository contains the code and datasets used in the paper "Evaluating the Impact of Flaky Simulators on Testing Autonomous Driving Systems". The paper presents a comprehensive study on test flakiness for simulation-based testing of autonomous driving systems (ADS) and investigates the impact of flaky ADS simulations on automated testing that relies on randomized algorithms. The paper also explores the effectiveness of machine learning (ML) in accurately identifying flaky ADS tests in a cost-effective manner.
+This repository contains the code for the "Active Image Labeling App" or AILA. The app is made for a specific labeling task that requires the annotator to compare an original image with a modified version of it.  The "Active" term is because of the active-learning backend that the application has. It reduces the human effort in labeling by automatically labeling some of the data based on what the ML-model is learning from the human annotator.
 
-<img src="figs/fig1.jpg" width="900">
 
 ## Abstract
 
