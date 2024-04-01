@@ -255,7 +255,7 @@ def report():
     number_of_h = len(df.loc[df["human-machine"] == "h"])
     number_of_m = len(df.loc[df["human-machine"] == "m"])
     st.write("📑   FINAL REPORT")
-    st.write("+ Number of automatically labeled data:  ", str(number_of_h), " out of ", str(number_of_h + number_of_m))
+    st.write("+ Number of automatically labeled data:  ", str(number_of_m), " out of ", str(number_of_h + number_of_m))
     st.write("+ Human effort is reduced by:  ", str(100-(100*number_of_h/(number_of_h + number_of_m)))[:4], "%")
     if "true_label" in df.columns:
         df2 = df.loc[df["human-machine"] == 'm'] 
