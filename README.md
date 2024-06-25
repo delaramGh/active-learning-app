@@ -24,7 +24,7 @@ To use the application, follow these steps:
 *Please note that the initial launch requires additional time as the application is generating a .CSV file for the dataset and performing preprocessing on the image pairs.
 
       
-<img src="figs/app.jpg" width="80%">
+<img src="figs/req.jpg" width="80%">
   
 
 ## Results
