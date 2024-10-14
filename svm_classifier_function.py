@@ -6,7 +6,7 @@ from skimage import img_as_float
 #for CPL
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.vgg16 import preprocess_input
-from tensorflow.keras.losses import mean_squared_error as mse
+from tensorflow.keras.losses import MSE
 import numpy as np
 #for CS
 from sklearn.metrics.pairwise import cosine_similarity
@@ -37,7 +37,7 @@ def svm_classifier(org_img_path, gen_img_path):
     x_gen = np.array([preprocess_input(img_gen)])
     x_org = model.predict(x_org)
     x_gen = model.predict(x_gen)
-    cpl = np.array(mse(x_org.reshape(1, -1), x_gen.reshape(1, -1)))[0]
+    cpl = np.array(MSE(x_org.reshape(1, -1), x_gen.reshape(1, -1)))[0]
 
     #CS
     cs = cosine_similarity(x_org.reshape(1, -1), x_gen.reshape(1, -1))[0, 0]
@@ -65,7 +65,7 @@ def preprocessing(org_img_path, gen_img_path):
     x_gen = np.array([preprocess_input(img_gen)])
     x_org = model.predict(x_org, verbose = 0)
     x_gen = model.predict(x_gen, verbose = 0)
-    cpl = np.array(mse(x_org.reshape(1, -1), x_gen.reshape(1, -1)))[0]
+    cpl = np.array(MSE(x_org.reshape(1, -1), x_gen.reshape(1, -1)))[0]
 
     #CS
     cs = cosine_similarity(x_org.reshape(1, -1), x_gen.reshape(1, -1))[0, 0]
