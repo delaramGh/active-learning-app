@@ -236,17 +236,6 @@ def number_of_unlabeled_data(df_name):
     return np.sum(df["Label"] == -1)
 
 
-def __new_model_eval__(model, df_name, n):
-    pass
-    #it should compare the data to human labels
-
-    # df = pd.read_csv(df_name)
-    # x_test = np.array([np.array([df["PSNR"][i], df["SSIM"][i], df["CPL"][i], df["CS"][i]]) for i in range(n)])
-    # y_test = np.array(df["Label"][:n])
-    # ans = model.predict(x_test)
-    # print("Accuracy of this model is: ", 100*np.sum(ans == y_test)/n)
-
-
 def report():
     ## final eval
     df = pd.read_csv(csv_path__)
