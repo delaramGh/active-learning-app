@@ -1,12 +1,3 @@
-# step 1: extract features from the data (preprocessing) 
-# step 2: split the dataset into train (10%) and test (90%)
-# step 3: train the SVM model on the training data
-# step 4: caculate models confidence on the test data and decide which ones can be labeled
-# step 5: choose 2% samples for human annotation
-# step 6: re-train the model with the new annotated data
-# step 7: if any sample is unlabeled, go to step 4
-
-
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
@@ -21,6 +12,19 @@ import streamlit as st
 
 
 def configuration():
+    """
+    Reads the configuration file 'AL-config.txt' to extract parameters.
+    
+    Returns:
+        org_path (str): Original images directory.
+        gen_path (str): Generated images directory.
+        split1 (float): First split ratio.
+        split2 (float): Second split ratio.
+        threshold (float): Confidence threshold for predictions.
+        
+    Example:
+        org_path, gen_path, split1, split2, threshold = configuration()
+    """
     with open("AL-config.txt", 'r') as f:
         lines = f.readlines()
     splt1 = lines[0]
@@ -42,13 +46,42 @@ csv_path__ = "AILA_Dataset.csv"
 sub_csv_path__ = "AILA_sub_Dataset.csv"
 #*************************************utils**************************************
 def get_image_files():
+    """
+    Reads the subset CSV file to retrieve generated image file names.
+    
+    Returns:
+        list: List of generated image filenames.
+        
+    Example:
+        images = get_image_files()
+    """
     df = pd.read_csv(sub_csv_path__)
     return list(df["generated"])
 
 def load_labels():
+    """
+    Loads label data from the subset CSV file.
+    
+    Returns:
+        DataFrame: Pandas DataFrame containing labels.
+    
+    Example:
+        df_labels = load_labels()
+    """
     return pd.read_csv(sub_csv_path__)
 
 def update_labels(df_labels, image_file, selected_label):
+    """
+    Updates the label for a given image in the labels DataFrame and writes back to CSV.
+    
+    Args:
+        df_labels (DataFrame): DataFrame containing labels.
+        image_file (str): Filename of the image to update.
+        selected_label (str): "Ok" or "Lost" to set label to 1 or 0.
+        
+    Example:
+        update_labels(df, "image1.jpg", "Ok")
+    """
     if image_file in df_labels["generated"].values:
         if selected_label == "Ok":
             df_labels.loc[df_labels["generated"] == image_file, "Label"] = 1
@@ -72,6 +105,19 @@ STATUS = status_monitor()
 #********************************************************************************
 
 def create_csv_file(org_img_path, gen_img_path):
+    """
+    Creates a CSV file listing original and generated image pairs.
+    
+    Args:
+        org_img_path (str): Directory path for original images.
+        gen_img_path (str): Directory path for generated images.
+        
+    Returns:
+        str: Status message regarding CSV creation.
+        
+    Example:
+        msg = create_csv_file("path/to/original", "path/to/generated")
+    """
     if os.path.exists(csv_path__):
         print("CSV file already exists!")
         return "CSV file already exists!"
@@ -101,6 +147,19 @@ def create_csv_file(org_img_path, gen_img_path):
 
 
 def preprocessing2(org_img_path, gen_img_path):
+    """
+    Processes images to compute metrics like PSNR, SSIM, CPL, and CS and appends these to the CSV.
+    
+    Args:
+        org_img_path (str): Directory path for original images.
+        gen_img_path (str): Directory path for generated images.
+        
+    Returns:
+        str: Status message regarding preprocessing.
+        
+    Example:
+        status = preprocessing2("path/to/original", "path/to/generated")
+    """
     df = pd.read_csv(csv_path__)
     size = df.shape[0]
     if "PSNR" in df.columns:
@@ -127,6 +186,20 @@ def preprocessing2(org_img_path, gen_img_path):
 
 
 def create_sub_dataset(state, split1=split1__, split2=split2__):
+    """
+    Creates a subset CSV file based on given state and split ratios.
+    
+    Args:
+        state (dict): Dictionary indicating which subset to create.
+        split1 (float, optional): Ratio for the first subset. Default from configuration.
+        split2 (float, optional): Ratio for the second subset. Default from configuration.
+        
+    Returns:
+        str: Confirmation message about sub-dataset creation.
+        
+    Example:
+        msg = create_sub_dataset({"sub_dataset": 1})
+    """
     df = pd.read_csv(csv_path__)
     size = df.shape[0]
     if state["sub_dataset"] == 1:
@@ -144,6 +217,15 @@ def create_sub_dataset(state, split1=split1__, split2=split2__):
 
 
 def handle_training():
+    """
+    Trains the SVM model on the labeled data and predicts labels for unlabeled data.
+    
+    Returns:
+        tuple: A tuple containing messages from training and prediction steps.
+        
+    Example:
+        train_msg, predict_msg = handle_training()
+    """
     df = pd.read_csv(csv_path__)
     size = df.shape[0]
 
@@ -170,6 +252,15 @@ def handle_training():
     
 
 def merge_datasets():
+    """
+    Merges the labels from the subset CSV into the main CSV file.
+    
+    Returns:
+        str: Status message regarding dataset merge.
+        
+    Example:
+        msg = merge_datasets()
+    """
     df_main = pd.read_csv(csv_path__)
     df_sub = pd.read_csv(sub_csv_path__)
     l =  np.copy(df_main["Label"])
@@ -189,6 +280,15 @@ def merge_datasets():
 
 
 def check_sub_dataset_compeleted():
+    """
+    Checks if all samples in the subset dataset have been labeled.
+    
+    Returns:
+        int: 1 if complete, 0 if there are unlabeled entries.
+        
+    Example:
+        complete = check_sub_dataset_compeleted()
+    """
     df = pd.read_csv(sub_csv_path__)
     if -1 in df["Label"].values:
         return 0
@@ -198,6 +298,19 @@ def check_sub_dataset_compeleted():
     
 
 def model_train(x_train, y_train):
+    """
+    Trains an SVM classifier on the provided training data using a pipeline with standard scaling.
+    
+    Args:
+        x_train (ndarray): Training features.
+        y_train (ndarray): Training labels.
+    
+    Returns:
+        tuple: The trained model and a status message.
+        
+    Example:
+        model, msg = model_train(features, labels)
+    """
     clf = make_pipeline(StandardScaler(), SVC(gamma='auto', probability=True, random_state=42))
     clf.fit(x_train, y_train)
     # print("dgh: model training is done! ")
@@ -205,8 +318,20 @@ def model_train(x_train, y_train):
 
 
 def predict(model, df_name, threshold):
-    #this function uses the trained model to label the data that we are confident about.
-    #it writes the labels in the csv file.
+    """
+    Uses the trained model to predict labels for unlabeled data in the CSV file based on a threshold.
+    
+    Args:
+        model: Trained classifier with predict_proba method.
+        df_name (str): Path to the CSV file.
+        threshold (float): Confidence threshold for automatic labeling.
+    
+    Returns:
+        tuple: Count of automatically labeled samples, and a status message.
+        
+    Example:
+        count, message = predict(model, "data.csv", 0.9)
+    """
     df = pd.read_csv(df_name)
 
     cnt = 0
@@ -232,11 +357,29 @@ def predict(model, df_name, threshold):
             
 
 def number_of_unlabeled_data(df_name):
+    """
+    Counts the number of unlabeled samples in the provided CSV file.
+    
+    Args:
+        df_name (str): Path to the CSV file.
+    
+    Returns:
+        int: Number of unlabeled samples.
+    
+    Example:
+        num_unlabeled = number_of_unlabeled_data("data.csv")
+    """
     df = pd.read_csv(df_name)
     return np.sum(df["Label"] == -1)
 
 
 def report():
+    """
+    Generates a final report of labeling statistics and outputs the results via Streamlit.
+    
+    Example:
+        report()
+    """
     ## final eval
     df = pd.read_csv(csv_path__)
     df.drop(df.columns[df.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
@@ -253,5 +396,5 @@ def report():
         st.write("+ Accuracy: ", str(100*correct/len(df2["true_label"]))[:4])
 
 
-    
+
 
